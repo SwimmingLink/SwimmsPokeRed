@@ -135,9 +135,6 @@ IF DEF(_DEBUG)
 	call DebugPressedOrHeldB
 	jr nz, .trainerNotEngaging
 ENDC
-	ld a, [wPartyCount]
-	and a
-	jp z, .trainerNotEngaging
 	call CheckForEngagingTrainers
 	ld a, [wSpriteIndex]
 	cp $ff
