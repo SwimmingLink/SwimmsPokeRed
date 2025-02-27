@@ -135,13 +135,16 @@ IF DEF(_DEBUG)
 	call DebugPressedOrHeldB
 	jr nz, .trainerNotEngaging
 ENDC
+	ld a, [wPartyCount]
+	and a
+	jp z, .trainerNotEngaging
 	call CheckForEngagingTrainers
 	ld a, [wSpriteIndex]
 	cp $ff
 	jr nz, .trainerEngaging
-IF DEF(_DEBUG)
+; IF DEF(_DEBUG) ; Commented out to include in more than just the debug game
 .trainerNotEngaging
-ENDC
+; ENDC ; Commented out to include in more than just hte debug game
 	xor a
 	ld [wSpriteIndex], a
 	ld [wTrainerHeaderFlagBit], a
