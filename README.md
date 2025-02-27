@@ -1,6 +1,6 @@
 # Pokémon Red and Blue [![Build Status][ci-badge]][ci]
 
-This is a disassembly of Pokémon Red and Blue.
+This is a modified disassembly of Pokémon Red and Blue.
 
 It builds the following ROMs:
 
@@ -19,7 +19,7 @@ To set up the repository, see [**INSTALL.md**](INSTALL.md).
 - [**Symbols**][symbols]
 - [**Tools**][tools]
 
-You can find us on [Discord (pret, #pokered)](https://discord.gg/d5dubZ3).
+You can find pret on [Discord (pret, #pokered)](https://discord.gg/d5dubZ3).
 
 For other pret projects, see [pret.github.io](https://pret.github.io/).
 
