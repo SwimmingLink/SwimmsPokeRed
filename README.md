@@ -1,6 +1,6 @@
 # Pokémon Red and Blue [![Build Status][ci-badge]][ci]
 
-This is a modified disassembly of Pokémon Red and Blue.
+This is a disassembly by pret of Pokémon Red/Blue modified by SwimmingLink.
 
 It builds the following ROMs:
 
@@ -18,6 +18,8 @@ To set up the repository, see [**INSTALL.md**](INSTALL.md).
 - [**Wiki**][wiki] (includes [tutorials][tutorials])
 - [**Symbols**][symbols]
 - [**Tools**][tools]
+
+You can find SwimmingLink [all over](https://swimminglink.carrd.co)
 
 You can find pret on [Discord (pret, #pokered)](https://discord.gg/d5dubZ3).
 
