@@ -168,7 +168,7 @@ PokemonTower2FRivalText:
 	ld a, $6
 .done
 	ld [wTrainerNo], a
- 
+
 	ld a, 1
 	ld [wIsTrainerBattle], a
 	ld a, SCRIPT_POKEMONTOWER2F_DEFEATED_RIVAL
