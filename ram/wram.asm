@@ -1699,9 +1699,10 @@ wPseudoItemID:: db
 
 wUnusedAlreadyOwnedFlag:: db
 
-wIsTrainerBattle:: db
+	;ds 2 ;;;;;;;;;; filled in with the two lines below to allow splitting the Pokémon species lookup table from the trainer lookup table
+wIsTrainerBattle:: db ;; added to allow splitting the Pokémon species lookup table from the trainer lookup table
 
-wWasTrainerBattle:: db
+wWasTrainerBattle:: db ; added to allow splitting the Pokémon species lookup table from the trainer lookup table
 
 wEvoStoneItemID:: db
 
