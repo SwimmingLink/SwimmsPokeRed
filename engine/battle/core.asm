@@ -1155,7 +1155,7 @@ HandlePlayerBlackOut:
 	call DelayFrames
 	ld hl, Rival1WinText ;;-removed (see below)        to restore the rival's victory speeches - The game loads lose battle quotes for trainers by default
 	call PrintText ;;;;;;;;-replaced by the line below to restore the rival's victory speeches
-	'call PrintEndBattleText ;-replaces the line above    to restore the rival's victory speeches
+	;call PrintEndBattleText ;-replaces the line above    to restore the rival's victory speeches
 	ld a, [wCurMap]
 	cp OAKS_LAB
 	ret z            ; starter battle in oak's lab: don't black out
