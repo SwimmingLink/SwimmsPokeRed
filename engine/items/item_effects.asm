@@ -2934,6 +2934,8 @@ CheckMapForMon:
 	ld a, c
 	ld [de], a
 	inc de
+	inc hl ; This line and the line below were added to prevent the Pokédex's area search from overflowing
+	ret    ; This line and the line above were added to prevent the Pokédex's area search from overflowing
 .nextEntry
 	inc hl
 	inc hl
