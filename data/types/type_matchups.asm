@@ -111,7 +111,7 @@ TypeEffects:
 	db DRAGON,       STEEL,        NOT_VERY_EFFECTIVE ; Added Steel Type effectivenesses from gen' 2+
 	db DRAGON,       DRAGON,       SUPER_EFFECTIVE
 	db DRAGON,       FAIRY,        NO_EFFECT          ; Added Fairy Type effectivenesses from gen' 6+
-	db DARK,         FIGHTINGE,    NOT_VERY_EFFECTIVE ; Added Dark Type effectivenesses from gen' 2+
+	db DARK,         FIGHTING,     NOT_VERY_EFFECTIVE ; Added Dark Type effectivenesses from gen' 2+
 	db DARK,         GHOST,        SUPER_EFFECTIVE    ; Added Dark Type effectivenesses from gen' 2+
 	; db DARK,         STEEL,        NOT_VERY_EFFECTIVE ; Added Dark Type & Steel Type effectivenesses from gen' 2 but commented out to match gen' 6+
 	db DARK,         PSYCHIC_TYPE, SUPER_EFFECTIVE    ; Added Dark Type effectivenesses from gen' 2+
