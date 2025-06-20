@@ -1699,7 +1699,10 @@ wPseudoItemID:: db
 
 wUnusedAlreadyOwnedFlag:: db
 
-	ds 2
+	;ds 2 ;;;;;;;;;; formerly free space now filled in with the two newly defined variables below to allow splitting the Pokémon species lookup table from the trainer lookup table
+wIsTrainerBattle:: db ;; newly defined variable specified in RAM                                added to allow splitting the Pokémon species lookup table from the trainer lookup table
+
+wWasTrainerBattle:: db ; newly defined variable specified in RAM                                added to allow splitting the Pokémon species lookup table from the trainer lookup table
 
 wEvoStoneItemID:: db
 

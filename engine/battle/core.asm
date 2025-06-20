@@ -943,6 +943,12 @@ TrainerBattleVictory:
 ; win money
 	ld hl, MoneyForWinningText
 	call PrintText
+
+	xor a
+	ld [wIsTrainerBattle], a
+	inc a
+	ld [wWasTrainerBattle], a
+
 	ld de, wPlayerMoney + 2
 	ld hl, wAmountMoneyWon + 2
 	ld c, $3
@@ -1130,20 +1136,26 @@ ChooseNextMon:
 ; called when player is out of usable mons.
 ; prints appropriate lose message, sets carry flag if player blacked out (special case for initial rival fight)
 HandlePlayerBlackOut:
+	xor a
+	ld [wIsTrainerBattle], a
 	ld a, [wLinkState]
 	cp LINK_STATE_BATTLING
 	jr z, .notRival1Battle
-	ld a, [wCurOpponent]
-	cp OPP_RIVAL1
-	jr nz, .notRival1Battle
+	ld a, [wCurOpponent] ;;;; Who is the current opponent? ;;;;;-replaced by the line below to restore the rival's victory speeches
+	;ld a, [wIsInBattle] ;;;;;;; are we in a battle? ;;;;;;;;;;;;;;-replaces the line above    to restore the rival's victory speeches
+	cp OPP_RIVAL1 ;;;;;;;;;;; Is it Rival1? ;;;;;;;;;;;;;;;;;;;;-replaced by the line below to restore the rival's victory speeches
+	;dec a ;;;;;;;;;;;;;;;;;;;;; is the battle wild (no trainer)? ;-replaces the line above    to restore the rival's victory speaches
+	jr nz, .notRival1Battle ; if not, don't print our message. ;-replaced by the line below to restore the rival's victory speeches
+	;jr z, .notRival1Battle ;;;; if yes, don't print our message. ;-replaces the line above    to restore the rival's victory speeches
 	hlcoord 0, 0  ; rival 1 battle
 	lb bc, 8, 21
 	call ClearScreenArea
 	call ScrollTrainerPicAfterBattle
 	ld c, 40
 	call DelayFrames
-	ld hl, Rival1WinText
-	call PrintText
+	ld hl, Rival1WinText ;;-removed (see below)        to restore the rival's victory speeches - The game loads lose battle quotes for trainers by default
+	call PrintText ;;;;;;;;-replaced by the line below to restore the rival's victory speeches
+	;call PrintEndBattleText ;-replaces the line above    to restore the rival's victory speeches
 	ld a, [wCurMap]
 	cp OAKS_LAB
 	ret z            ; starter battle in oak's lab: don't black out
@@ -6797,9 +6809,11 @@ InitBattleCommon:
 	push af
 	res BIT_TEXT_DELAY, [hl] ; no delay
 	callfar InitBattleVariables
+	ld a, [wIsTrainerBattle]
+	and a
+	jp z, InitWildBattle
 	ld a, [wEnemyMonSpecies2]
 	sub OPP_ID_OFFSET
-	jp c, InitWildBattle
 	ld [wTrainerClass], a
 	call GetTrainerInformation
 	callfar ReadTrainer
