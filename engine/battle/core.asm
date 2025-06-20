@@ -317,7 +317,7 @@ MainInBattleLoop:
 	bit USING_TRAPPING_MOVE, a ; check if enemy is using a multi-turn attack like wrap
 	jr z, .selectPlayerMove ; if not, jump
 ; enemy is using a multi-turn attack like wrap, so player is trapped and cannot execute a move
-	ld a, $ff
+	ld a, CANNOT_MOVE
 	ld [wPlayerSelectedMove], a
 	jr .selectEnemyMove
 .selectPlayerMove
@@ -2387,10 +2387,10 @@ PartyMenuOrRockOrRun:
 	jr nz, .doEnemyMonAnimation
 ; enemy mon doesn't have substitute
 	ld a, [wEnemyMonMinimized]
-	and a ; has the enemy mon used Minimise?
+	and a ; has the enemy mon used Minimize?
 	ld hl, AnimationMinimizeMon
 	jr nz, .doEnemyMonAnimation
-; enemy mon is not minimised
+; enemy mon is not minimized
 	ld a, [wEnemyMonSpecies]
 	ld [wCurPartySpecies], a
 	ld [wCurSpecies], a
@@ -3006,7 +3006,7 @@ SelectEnemyMove:
 	pop hl
 	jr z, .chooseRandomMove ; move disabled, try again
 	and a
-	jr z, .chooseRandomMove ; move non-existant, try again
+	jr z, .chooseRandomMove ; move non-existent, try again
 .done
 	ld [wEnemySelectedMove], a
 	ret
@@ -3030,7 +3030,8 @@ LinkBattleExchangeData:
 	ld b, LINKBATTLE_STRUGGLE
 	jr z, .next
 	dec b ; LINKBATTLE_NO_ACTION
-	inc a ; does move equal -1 (i.e. no action)?
+	ASSERT CANNOT_MOVE == $ff
+	inc a
 	jr z, .next
 	ld a, [wPlayerMoveListIndex]
 	jr .doExchange
@@ -3083,8 +3084,9 @@ ExecutePlayerMove:
 	xor a
 	ldh [hWhoseTurn], a ; set player's turn
 	ld a, [wPlayerSelectedMove]
+	ASSERT CANNOT_MOVE == $ff
 	inc a
-	jp z, ExecutePlayerMoveDone ; for selected move = FF, skip most of player's turn
+	jp z, ExecutePlayerMoveDone ; if the player cannot move, skip most of their turn
 	xor a
 	ld [wMoveMissed], a
 	ld [wMonIsDisobedient], a
@@ -5596,6 +5598,7 @@ RandomizeDamage:
 ; for more detailed commentary, see equivalent function for player side (ExecutePlayerMove)
 ExecuteEnemyMove:
 	ld a, [wEnemySelectedMove]
+	ASSERT CANNOT_MOVE == $ff
 	inc a
 	jp z, ExecuteEnemyMoveDone
 	call PrintGhostText
