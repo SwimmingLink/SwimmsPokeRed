@@ -12,7 +12,7 @@ TypeEffects:
 	db FIGHTING,     STEEL,        SUPER_EFFECTIVE    ; Added Steel Type effectivenesses from gen' 2+
 	db FIGHTING,     PSYCHIC_TYPE, NOT_VERY_EFFECTIVE
 	db FIGHTING,     ICE,          SUPER_EFFECTIVE
-	db FIGHTING,     DARK,         SUPER_EFFECTIVE    ; Added Dark Type effectivenesses from gen' 2+
+	db FIGHTING,     DARK,         SUPER_EFFECTIVE    ; Added Dark  Type effectivenesses from gen' 2+
 	db FIGHTING,     FAIRY,        NOT_VERY_EFFECTIVE ; Added Fairy Type effectivenesses from gen' 6+
 	db FLYING,       FIGHTING,     SUPER_EFFECTIVE
 	db FLYING,       ROCK,         NOT_VERY_EFFECTIVE
@@ -51,13 +51,13 @@ TypeEffects:
 	db BUG,          FIRE,         NOT_VERY_EFFECTIVE
 	db BUG,          GRASS,        SUPER_EFFECTIVE
 	db BUG,          PSYCHIC_TYPE, SUPER_EFFECTIVE
-	db BUG,          DARK,         SUPER_EFFECTIVE    ; Added Dark Type effectivenesses from gen' 2+
+	db BUG,          DARK,         SUPER_EFFECTIVE    ; Added Dark  Type effectivenesses from gen' 2+
 	db BUG,          FAIRY,        NOT_VERY_EFFECTIVE ; Added Fairy Type effectivenesses from gen' 6+
 	db GHOST,        NORMAL,       NO_EFFECT
 	db GHOST,        GHOST,        SUPER_EFFECTIVE
 	; db GHOST,        STEEL,        NOT_VERY_EFFECTIVE ; Added Steel Type effectivenesses from gen' 2 but commented out to match gen' 6+
 	db GHOST,        PSYCHIC_TYPE, SUPER_EFFECTIVE    ; Changed from NO_EFFECT to match gen' 2+
-	db GHOST,        DARK,         NOT_VERY_EFFECTIVE ; Added Dark Type effectivenesses from gen' 2+
+	db GHOST,        DARK,         NOT_VERY_EFFECTIVE ; Added Dark  Type effectivenesses from gen' 2+
 	db STEEL,        ROCK,         SUPER_EFFECTIVE    ; Added Steel Type effectivenesses from gen' 2+
 	db STEEL,        STEEL,        NOT_VERY_EFFECTIVE ; Added Steel Type effectivenesses from gen' 2+
 	db STEEL,        FIRE,         NOT_VERY_EFFECTIVE ; Added Steel Type effectivenesses from gen' 2+
@@ -99,7 +99,7 @@ TypeEffects:
 	db PSYCHIC_TYPE, POISON,       SUPER_EFFECTIVE
 	db PSYCHIC_TYPE, STEEL,        NOT_VERY_EFFECTIVE ; Added Steel Type effectivenesses from gen' 2+
 	db PSYCHIC_TYPE, PSYCHIC_TYPE, NOT_VERY_EFFECTIVE
-	db PSYCHIC_TYPE, DARK,         NO_EFFECT          ; Added Dark Type effectivenesses from gen' 2+
+	db PSYCHIC_TYPE, DARK,         NO_EFFECT          ; Added Dark  Type effectivenesses from gen' 2+
 	db ICE,          FLYING,       SUPER_EFFECTIVE
 	db ICE,          GROUND,       SUPER_EFFECTIVE
 	db ICE,          STEEL,        NOT_VERY_EFFECTIVE ; Added Steel Type effectivenesses from gen' 2+
@@ -111,11 +111,11 @@ TypeEffects:
 	db DRAGON,       STEEL,        NOT_VERY_EFFECTIVE ; Added Steel Type effectivenesses from gen' 2+
 	db DRAGON,       DRAGON,       SUPER_EFFECTIVE
 	db DRAGON,       FAIRY,        NO_EFFECT          ; Added Fairy Type effectivenesses from gen' 6+
-	db DARK,         FIGHTING,     NOT_VERY_EFFECTIVE ; Added Dark Type effectivenesses from gen' 2+
-	db DARK,         GHOST,        SUPER_EFFECTIVE    ; Added Dark Type effectivenesses from gen' 2+
-	; db DARK,         STEEL,        NOT_VERY_EFFECTIVE ; Added Dark Type & Steel Type effectivenesses from gen' 2 but commented out to match gen' 6+
-	db DARK,         PSYCHIC_TYPE, SUPER_EFFECTIVE    ; Added Dark Type effectivenesses from gen' 2+
-	db DARK,         DARK,         NOT_VERY_EFFECTIVE ; Added Dark Type effectivenesses from gen' 2+
+	db DARK,         FIGHTING,     NOT_VERY_EFFECTIVE ; Added Dark  Type effectivenesses from gen' 2+
+	db DARK,         GHOST,        SUPER_EFFECTIVE    ; Added Dark  Type effectivenesses from gen' 2+
+	; db DARK,         STEEL,        NOT_VERY_EFFECTIVE ; Added Dark  Type & Steel Type effectivenesses from gen' 2 but commented out to match gen' 6+
+	db DARK,         PSYCHIC_TYPE, SUPER_EFFECTIVE    ; Added Dark  Type effectivenesses from gen' 2+
+	db DARK,         DARK,         NOT_VERY_EFFECTIVE ; Added Dark  Type effectivenesses from gen' 2+
 	db DARK,         FAIRY,        NOT_VERY_EFFECTIVE ; Added Fairy Type effectivenesses from gen' 6+
 	db FAIRY,        FIGHTING,     SUPER_EFFECTIVE    ; Added Fairy Type effectivenesses from gen' 6+
 	db FAIRY,        POISON,       NOT_VERY_EFFECTIVE ; Added Fairy Type effectivenesses from gen' 6+
