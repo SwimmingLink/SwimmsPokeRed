@@ -24,3 +24,10 @@ You can find SwimmingLink [All over](https://swimminglink.carrd.co)
 You can find pret on [Discord (pret, #pokered)](https://discord.gg/d5dubZ3).
 
 For other pret projects, see [pret.github.io](https://pret.github.io/).
+
+[wiki]: https://github.com/pret/pokered/wiki
+[tutorials]: https://github.com/pret/pokered/wiki/Tutorials
+[symbols]: https://github.com/pret/pokered/tree/symbols
+[tools]: https://github.com/pret/gb-asm-tools
+[ci]: https://github.com/pret/pokered/actions
+[ci-badge]: https://github.com/pret/pokered/actions/workflows/main.yml/badge.svg
