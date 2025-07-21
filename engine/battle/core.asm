@@ -943,6 +943,12 @@ TrainerBattleVictory:
 ; win money
 	ld hl, MoneyForWinningText
 	call PrintText
+
+	xor a ;;;;;;;;;;;;;;;;;;;;; This line and the three lines below were added to allow splitting the trainer lookup table from the Pokémon species lookup table
+	ld [wIsTrainerBattle], a ;; This line, the line above, and the two lines below were added to allow splitting the trainer lookup table from the Pokémon species lookup table
+	inc a ;;;;;;;;;;;;;;;;;;;;; This line, the two lines above, and the line below were added to allow splitting the trainer lookup table from the Pokémon species lookup table
+	ld [wWasTrainerBattle], a ; This line and the three lines above were added to allow splitting the trainer lookup table from the Pokémon species lookup table
+
 	ld de, wPlayerMoney + 2
 	ld hl, wAmountMoneyWon + 2
 	ld c, $3
@@ -1130,6 +1136,8 @@ ChooseNextMon:
 ; called when player is out of usable mons.
 ; prints appropriate lose message, sets carry flag if player blacked out (special case for initial rival fight)
 HandlePlayerBlackOut:
+	xor a ;;;;;;;;;;;;;;;;;;;; This line and the line below were added to allow splitting the trainer lookup table from the Pokémon species lookup table
+	ld [wIsTrainerBattle], a ; This line and the line above were added to allow splitting the trainer lookup table from the Pokémon species lookup table
 	ld a, [wLinkState]
 	cp LINK_STATE_BATTLING
 	jr z, .notRival1Battle
@@ -6800,9 +6808,12 @@ InitBattleCommon:
 	push af
 	res BIT_TEXT_DELAY, [hl] ; no delay
 	callfar InitBattleVariables
+	ld a, [wIsTrainerBattle] ; This line and the two lines below were added to allow splitting the trainer lookup table from the Pokémon species lookup table
+	and a ;;;;;;;;;;;;;;;;;;;; This line, the line above, and the line below were added to allow splitting the trainer lookup table from the Pokémon species lookup table
+	jp z, InitWildBattle ;;;;; This line and the two lines above were added to allow splitting the trainer lookup table from the Pokémon species lookup table
 	ld a, [wEnemyMonSpecies2]
 	sub OPP_ID_OFFSET
-	jp c, InitWildBattle
+;	; jp c, InitWildBattle ; This line was removed allow splitting the trainer lookup table from the Pokémon species lookup table
 	ld [wTrainerClass], a
 	call GetTrainerInformation
 	callfar ReadTrainer
