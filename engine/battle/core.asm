@@ -6813,7 +6813,7 @@ InitBattleCommon:
 	jp z, InitWildBattle ;;;;; This line and the two lines above were added to allow splitting the trainer lookup table from the Pokémon species lookup table
 	ld a, [wEnemyMonSpecies2]
 	sub OPP_ID_OFFSET
-;	; jp c, InitWildBattle ; This line was removed allow splitting the trainer lookup table from the Pokémon species lookup table
+;	; jp c, InitWildBattle ; This line was removed to allow splitting the trainer lookup table from the Pokémon species lookup table
 	ld [wTrainerClass], a
 	call GetTrainerInformation
 	callfar ReadTrainer
