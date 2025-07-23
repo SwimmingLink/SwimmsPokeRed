@@ -89,9 +89,12 @@ BattleTransitions:
 	assert_table_length 1 << NUM_BATTLE_TRANSITION_BITS
 
 GetBattleTransitionID_WildOrTrainer:
-	ld a, [wCurOpponent]
-	cp OPP_ID_OFFSET
-	jr nc, .trainer
+;	; ld a, [wCurOpponent] ; This line and the two lines below are the old way of determining if a battle is a trainer or a Pokémon
+;	; cp OPP_ID_OFFSET ;;;;; This line, the line above, and the line below are the old way of determining if a battle is a trainer or a Pokémon
+;	; jr nc, .trainer ;;;;;; This line and the two lines above are the old way of determining if a battle is a trainer or a Pokémon, replaced by the three lines below
+	ld a, [wIsTrainerBattle] ; This line and the two lines below replace the three lines above to determine if a battle is a trainer or a Pokémon to allow splitting the trainer lookup table from the Pokémon species lookup table
+	and a ;;;;;;;;;;;;;;;;;;;; This line, the line above, and the line below replace the old way of determining if a battle is a trainer or a Pokémon
+	jr nz, .trainer ;;;;;;;;;; This line and the two lines above replace the old way of determining if a battle is a trainer or a Pokémon
 	res BIT_TRAINER_BATTLE_TRANSITION, c
 	ret
 .trainer

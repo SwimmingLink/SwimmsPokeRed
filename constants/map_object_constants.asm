@@ -63,4 +63,6 @@ DEF LEFT       EQU $D2
 DEF RIGHT      EQU $D3
 DEF NONE       EQU $FF
 
+DEF OW_POKEMON EQU $80 ; Define a constant for OverWorld Pokémon to allow splitting the trainer lookup table from the Pokémon species lookup table
+
 DEF BOULDER_MOVEMENT_BYTE_2 EQU $10
