@@ -3,7 +3,7 @@
 	db  70,  45,  48,  35,  60
 	;   hp  atk  def  spd  spc
 
-	db NORMAL, NORMAL ; type
+	db FAIRY, FAIRY ; type ; Changed to pure Fairy type from pure Normal Type to match gen' 6+
 	db 150 ; catch rate
 	db 68 ; base exp
 
