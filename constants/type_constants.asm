@@ -14,8 +14,7 @@ DEF PHYSICAL EQU const_value
 	const STEEL        ; $09
 
 DEF UNUSED_TYPES EQU const_value
-	const_next 19      ; decreased from "const_next 20" ($14) to "const_next 19" ($13) to add "???" type (only used for Curse in gen's 2-4)
-	const CURSE_TYPE   ; $13
+	const_next 20
 DEF UNUSED_TYPES_END EQU const_value
 
 DEF SPECIAL EQU const_value
