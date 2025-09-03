@@ -195,9 +195,13 @@ HoFLoadPlayerPics:
 	ld de, RedPicBack
 	ld a, BANK(RedPicBack)
 	call UncompressSpriteFromDE
-	predef ScaleSpriteByTwo
+;	; predef ScaleSpriteByTwo ;;;;;;;;;; line removed to allow back sprites an increased resolution
+	ld a, $66 ;;;;;;;;;;;;;;;;;;;;;;;;;; line added   to allow back sprites an increased resolution
 	ld de, vBackPic
-	call InterlaceMergeSpriteBuffers
+;	; call InterlaceMergeSpriteBuffers ; line removed to allow back sprites an increased resolution
+	push de ;;;;;;;;;;;;;;;;;;;;;;;;;;;; line added   to allow back sprites an increased resolution
+	jp LoadUncompressedBackSprite ;;;;;; line added   to allow back sprites an increased resolution
+	nop ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; line added   to allow back sprites an increased resolution
 	ld c, $1
 
 HoFLoadMonPlayerPicTileIDs:
