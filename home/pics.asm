@@ -60,6 +60,7 @@ LoadMonFrontSprite::
 	call UncompressMonSprite
 	ld hl, wMonHSpriteDim
 	ld a, [hli]
+LoadUncompressedBackSprite:: ; This line was added to allow back sprites an increased resolution
 	ld c, a
 	pop de
 	; fall through

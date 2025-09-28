@@ -6347,7 +6347,8 @@ LoadPlayerBackPic:
 	ld a, BANK(RedPicBack)
 	ASSERT BANK(RedPicBack) == BANK(OldManPicBack)
 	call UncompressSpriteFromDE
-	predef ScaleSpriteByTwo
+;	; predef ScaleSpriteByTwo ;;; this line was replaced by the line below to allow back sprites an increased resolution
+	call LoadBackSpriteUnzoomed ; this line     replaced    the line above to allow back sprites an increased resolution
 	ld hl, wShadowOAM
 	xor a
 	ldh [hOAMTile], a ; initial tile number
@@ -6379,8 +6380,8 @@ LoadPlayerBackPic:
 	ld e, a
 	dec b
 	jr nz, .loop
-	ld de, vBackPic
-	call InterlaceMergeSpriteBuffers
+;	; ld de, vBackPic ;;;;;;;;;;;;;;;;;; This line and the line below were removed to allow back sprites an increased resolution
+;	; call InterlaceMergeSpriteBuffers ; This line and the line above were removed to allow back sprites an increased resolution
 	ld a, RAMG_SRAM_ENABLE
 	ld [rRAMG], a
 	xor a
@@ -7053,12 +7054,19 @@ LoadMonBackPic:
 	call ClearScreenArea
 	ld hl,  wMonHBackSprite - wMonHeader
 	call UncompressMonSprite
-	predef ScaleSpriteByTwo
-	ld de, vBackPic
-	call InterlaceMergeSpriteBuffers ; combine the two buffers to a single 2bpp sprite
+;	; predef ScaleSpriteByTwo
+;	; ld de, vBackPic
+;	; call InterlaceMergeSpriteBuffers ; combine the two buffers to a single 2bpp sprite
+	call LoadBackSpriteUnzoomed ; This line replaces the three lines above to allow back sprites an increased resolution
 	ld hl, vSprites
 	ld de, vBackPic
 	ld c, (2 * SPRITEBUFFERSIZE) / 16 ; count of 16-byte chunks to be copied
 	ldh a, [hLoadedROMBank]
 	ld b, a
 	jp CopyVideoData
+
+LoadBackSpriteUnzoomed: ; This line and the four lines below were added to allow back sprites an increased resolution
+	ld a, $66
+	ld de, vBackPic
+	push de
+	jp LoadUncompressedBackSprite
