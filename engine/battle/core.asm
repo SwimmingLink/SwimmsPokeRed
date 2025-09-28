@@ -6381,7 +6381,7 @@ LoadPlayerBackPic:
 	jr nz, .loop
 ;	; ld de, vBackPic ;;;;;;;;;;;;;;;;;; This line and the line below were removed to allow back sprites an increased resolution
 ;	; call InterlaceMergeSpriteBuffers ; This line and the line above were removed to allow back sprites an increased resolution
-	ld a, $a
+	ld a, RAMG_SRAM_ENABLE
 	ld [rRAMG], a
 	xor a
 	ld [rRAMB], a
