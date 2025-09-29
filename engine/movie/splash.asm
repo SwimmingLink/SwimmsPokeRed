@@ -124,7 +124,7 @@ AnimateShootingStar:
 	ld a, [wMoveDownSmallStarsOAMCount]
 	cp 24
 	jr z, .next2
-	add 6 ; should be 4, but the extra 2 aren't visible on screen
+	add 4 ; reduced from 6 to 4 as the extra 2 weren't visible on screen
 	ld [wMoveDownSmallStarsOAMCount], a
 .next2
 	call MoveDownSmallStars
