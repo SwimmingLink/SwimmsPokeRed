@@ -1354,7 +1354,9 @@ wTempTilesetNumTiles:: db
 ; so that it can be restored when the player is done with the pokemart NPC
 wSavedListScrollOffset:: db
 
-	ds 2
+wAltAnimationID:: db ; This was added to allow splitting the move animations and alternate in-battle animations into two separate tables, lowering the following line from 2 to 1
+
+	ds 1 ; This was reduced from 2 to 1 to add the above line of wAltAnimationID
 
 ; base coordinates of frame block
 wBaseCoordX:: db

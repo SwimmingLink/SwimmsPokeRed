@@ -175,8 +175,10 @@ DEF NUM_ATTACKS EQU const_value - 1
 
 DEF CANNOT_MOVE EQU $ff
 
-	; Moves do double duty as animation identifiers.
+	; Moves used to do double duty as animation identifiers, but the next two lines were added to Separate other battle animations.
 
+	const_def ;;;;; This line was added to start the enumeration again starting from zero.
+	const NO_ANIM ; This line was added so that SHOWPIC_ANIM is not zero
 	const SHOWPIC_ANIM
 	const STATUS_AFFECTED_ANIM
 	const ANIM_A8
@@ -215,4 +217,4 @@ DEF CANNOT_MOVE EQU $ff
 	const ROCK_ANIM ; throw rock
 	const BAIT_ANIM ; throw bait
 
-DEF NUM_ATTACK_ANIMS EQU const_value - 1
+DEF NUM_ALTERNATIVE_ANIMS EQU const_value - 1 ; NUM_ATTACK_ANIMS was changed to NUM_ALTERNATIVE_ANIMS to split the table into two
