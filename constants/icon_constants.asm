@@ -11,8 +11,8 @@
 	const ICON_GRASS       ; $7
 	const ICON_SNAKE       ; $8
 	const ICON_QUADRUPED   ; $9
-	const ICON_PIKACHU     ; $a
-	const_skip 3
+	const ICON_PIKACHU     ; $a ; Added from Yellow
+	const_skip 3                ; Reduced from 4 to 3 to account for the newly added Pikachu icon line above
 	const ICON_TRADEBUBBLE ; $e
 
 DEF ICONOFFSET EQU $40 ; difference between alternating icon frames' tile IDs
