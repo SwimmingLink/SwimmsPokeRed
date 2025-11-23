@@ -20,7 +20,7 @@ SlidePlayerAndEnemySilhouettesOnScreen:
 	ld hl, vBGMap0
 	ld bc, TILEMAP_AREA
 .clearBackgroundLoop
-	ld a, " "
+	ld a, ' '
 	ld [hli], a
 	dec bc
 	ld a, b
@@ -106,8 +106,8 @@ SlidePlayerAndEnemySilhouettesOnScreen:
 SlidePlayerHeadLeft:
 	push bc
 	ld hl, wShadowOAMSprite00XCoord
-	ld c, $15 ; number of OAM entries
-	ld de, $4 ; size of OAM entry
+	ld c, 7 * 3 ; number of OAM entries
+	ld de, OBJ_SIZE
 .loop
 	dec [hl] ; decrement X
 	dec [hl] ; decrement X
@@ -1992,11 +1992,11 @@ CenterMonName:
 .loop
 	inc de
 	ld a, [de]
-	cp "@"
+	cp '@'
 	jr z, .done
 	inc de
 	ld a, [de]
-	cp "@"
+	cp '@'
 	jr z, .done
 	dec hl
 	dec b
@@ -2044,15 +2044,15 @@ DisplayBattleMenu::
 	call CopyData
 ; the following simulates the keystrokes by drawing menus on screen
 	hlcoord 9, 14
-	ld [hl], "▶"
+	ld [hl], '▶'
 	ld c, 80
 	call DelayFrames
-	ld [hl], " "
+	ld [hl], ' '
 	hlcoord 9, 16
-	ld [hl], "▶"
+	ld [hl], '▶'
 	ld c, 50
 	call DelayFrames
-	ld [hl], "▷"
+	ld [hl], '▷'
 	ld a, $2 ; select the "ITEM" menu
 	jp .upperLeftMenuItemWasNotSelected
 .oldManName
@@ -2070,7 +2070,7 @@ DisplayBattleMenu::
 .leftColumn ; put cursor in left column of menu
 	ld a, [wBattleType]
 	cp BATTLE_TYPE_SAFARI
-	ld a, " "
+	ld a, ' '
 	jr z, .safariLeftColumn
 ; put cursor in left column for normal battle menu (i.e. when it's not a Safari battle)
 	ldcoord_a 15, 14 ; clear upper cursor position in right column
@@ -2103,7 +2103,7 @@ DisplayBattleMenu::
 .rightColumn ; put cursor in right column of menu
 	ld a, [wBattleType]
 	cp BATTLE_TYPE_SAFARI
-	ld a, " "
+	ld a, ' '
 	jr z, .safariRightColumn
 ; put cursor in right column for normal battle menu (i.e. when it's not a Safari battle)
 	ldcoord_a 9, 14 ; clear upper cursor position in left column
@@ -2336,7 +2336,7 @@ PartyMenuOrRockOrRun:
 .partyMonDeselected
 	hlcoord 11, 11
 	ld bc, 6 * SCREEN_WIDTH + 9
-	ld a, " "
+	ld a, ' '
 	call FillMemory
 	xor a ; NORMAL_PARTY_MENU
 	ld [wPartyMenuTypeOrMessageID], a
@@ -2503,9 +2503,9 @@ MoveSelectionMenu:
 	   ; so it is necessary to put the di ei block to not cause tearing
 	call TextBoxBorder
 	hlcoord 4, 12
-	ld [hl], "─"
+	ld [hl], '─'
 	hlcoord 10, 12
-	ld [hl], "┘"
+	ld [hl], '┘'
 	ei
 	hlcoord 6, 13
 	call .writemoves
@@ -2611,7 +2611,7 @@ SelectMenuItem:
 	dec a
 	ld bc, SCREEN_WIDTH
 	call AddNTimes
-	ld [hl], "▷"
+	ld [hl], '▷'
 .select
 	ld hl, hUILayoutFlags
 	set BIT_DOUBLE_SPACED_MENU, [hl]
@@ -2894,9 +2894,9 @@ PrintMenuItem:
 	ld de, TypeText
 	call PlaceString
 	hlcoord 7, 11
-	ld [hl], "/"
+	ld [hl], '/'
 	hlcoord 5, 9
-	ld [hl], "/"
+	ld [hl], '/'
 	hlcoord 5, 11
 	ld de, wBattleMenuCurrentPP
 	lb bc, 1, 2
@@ -6664,11 +6664,11 @@ LoadHudTilePatterns:
 .lcdEnabled
 	ld de, BattleHudTiles1
 	ld hl, vChars2 tile $6d
-	lb bc, BANK(BattleHudTiles1), (BattleHudTiles1End - BattleHudTiles1) / $8
+	lb bc, BANK(BattleHudTiles1), (BattleHudTiles1End - BattleHudTiles1) / TILE_1BPP_SIZE
 	call CopyVideoDataDouble
 	ld de, BattleHudTiles2
 	ld hl, vChars2 tile $73
-	lb bc, BANK(BattleHudTiles2), (BattleHudTiles3End - BattleHudTiles2) / $8
+	lb bc, BANK(BattleHudTiles2), (BattleHudTiles3End - BattleHudTiles2) / TILE_1BPP_SIZE
 	jp CopyVideoDataDouble
 
 PrintEmptyString:
@@ -6861,17 +6861,17 @@ InitWildBattle:
 	ld [hli], a   ; write front sprite pointer
 	ld [hl], b
 	ld hl, wEnemyMonNick  ; set name to "GHOST"
-	ld a, "G"
+	ld a, 'G'
 	ld [hli], a
-	ld a, "H"
+	ld a, 'H'
 	ld [hli], a
-	ld a, "O"
+	ld a, 'O'
 	ld [hli], a
-	ld a, "S"
+	ld a, 'S'
 	ld [hli], a
-	ld a, "T"
+	ld a, 'T'
 	ld [hli], a
-	ld [hl], "@"
+	ld [hl], '@'
 	ld a, [wCurPartySpecies]
 	push af
 	ld a, MON_GHOST
@@ -7060,7 +7060,7 @@ LoadMonBackPic:
 	ld b, 7
 	ld c, 8
 	call ClearScreenArea
-	ld hl,  wMonHBackSprite - wMonHeader
+	ld hl, wMonHBackSprite - wMonHeader
 	call UncompressMonSprite
 ;	; predef ScaleSpriteByTwo
 ;	; ld de, vBackPic
@@ -7068,7 +7068,7 @@ LoadMonBackPic:
 	call LoadBackSpriteUnzoomed ; This line replaces the three lines above to allow back sprites an increased resolution
 	ld hl, vSprites
 	ld de, vBackPic
-	ld c, (2 * SPRITEBUFFERSIZE) / 16 ; count of 16-byte chunks to be copied
+	ld c, (2 * SPRITEBUFFERSIZE) / TILE_SIZE ; count of 16-byte chunks to be copied
 	ldh a, [hLoadedROMBank]
 	ld b, a
 	jp CopyVideoData
