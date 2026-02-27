@@ -1493,6 +1493,7 @@ PrimeapeEvosMoves:
 	db 27, FOCUS_ENERGY
 	db 28, RAGE
 	db 37, SEISMIC_TOSS
+	db 45, SCREECH
 	db 46, THRASH
 	db 0
 
