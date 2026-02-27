@@ -22,7 +22,7 @@ DrawFrameBlock:
 	jp z, .flipHorizontalTranslateDown ; SUBANIMTYPE_HFLIP
 	dec a
 	jr z, .flipBaseCoords              ; SUBANIMTYPE_COORDFLIP
-.noTransformation
+; no transformation
 	ld a, [wBaseCoordY]
 	add [hl]
 	ld [de], a ; store Y
@@ -130,7 +130,7 @@ DrawFrameBlock:
 	ld a, [wNumFBTiles]
 	cp c
 	jp nz, .loop ; go back up if there are more tiles to draw
-.afterDrawingTiles
+; after drawing tiles
 	ld a, [wFBMode]
 	cp FRAMEBLOCKMODE_02
 	jr z, .advanceFrameBlockDestAddr ; skip delay and don't clean OAM buffer
@@ -185,7 +185,7 @@ PlayAnimation:
 	jr z, .AnimationOver
 	cp FIRST_SE_ID ; is this subanimation or a special effect?
 	jr c, .playSubanimation
-.doSpecialEffect
+; do Special Effect
 	ld c, a
 	ld de, SpecialEffectPointers
 .searchSpecialEffectTableLoop
@@ -295,11 +295,11 @@ LoadSubanimation:
 	and %11100000
 	cp SUBANIMTYPE_ENEMY << 5
 	vc_hook_blue Reduce_move_anim_flashing_Blizzard
-	jr nz, .isNotType5
-.isType5
+	jr nz, .isNotTypeEnemy
+; subanim type enemy
 	call GetSubanimationTransform2
 	jr .saveTransformation
-.isNotType5
+.isNotTypeEnemy
 	vc_hook Reduce_move_anim_flashing_Hyper_Beam
 	call GetSubanimationTransform1
 .saveTransformation
@@ -427,11 +427,11 @@ MoveAnimation:
 	call PlayAnimation
 	vc_hook_red Stop_reducing_move_anim_flashing_Bubblebeam_Mega_Kick
 	vc_hook_blue Stop_reducing_move_anim_flashing_Spore
-	jr .next4
+	jr .next
 .animationsDisabled
 	ld c, 30
 	call DelayFrames
-.next4
+.next
 	vc_hook_red Stop_reducing_move_anim_flashing
 	vc_hook_blue Stop_reducing_move_anim_flashing_Rock_Slide_Dream_Eater
 	call PlayApplyingAttackAnimation ; shake the screen or flash the pic in and out (to show damage)
@@ -1097,6 +1097,8 @@ SetAnimationBGPalette:
 	ldh [rBGP], a
 	ret
 
+AnimationUnusedShakeScreen: ; unreferenced
+; Shakes the screen for a while.
 	ld b, $5
 
 AnimationShakeScreenVertically:
@@ -1213,12 +1215,12 @@ _AnimationSlideMonUp:
 	push bc
 
 ; In each iteration, slide up all rows but the top one (which is overwritten).
-	ld b, 6
+	ld b, PIC_HEIGHT - 1
 .slideLoop
 	push bc
 	push de
 	push hl
-	ld bc, 7
+	ld bc, PIC_WIDTH
 	call CopyData
 ; Note that de and hl are popped in the same order they are pushed, swapping
 ; their values. When CopyData is called, hl points to a tile 1 row below
@@ -1242,10 +1244,10 @@ _AnimationSlideMonUp:
 	ld a, [wSlideMonUpBottomRowLeftTile]
 	inc a
 	ld [wSlideMonUpBottomRowLeftTile], a
-	ld c, 7
+	ld c, PIC_WIDTH
 .fillBottomRowLoop
 	ld [hli], a
-	add 7
+	add PIC_WIDTH
 	dec c
 	jr nz, .fillBottomRowLoop
 
@@ -1723,10 +1725,10 @@ AnimationMinimizeMon:
 	ld hl, wTempPic
 	push hl
 	xor a
-	ld bc, (7 * 7) tiles
+	ld bc, PIC_SIZE tiles
 	call FillMemory
 	pop hl
-	ld de, (7 * 3 + 4) tiles + TILE_SIZE / 4
+	ld de, (PIC_WIDTH * 3 + 4) tiles + TILE_SIZE / 4
 	add hl, de
 	ld de, MinimizedMonSprite
 	ld c, MinimizedMonSpriteEnd - MinimizedMonSprite
@@ -1774,7 +1776,7 @@ AnimationSlideMonDownAndHide:
 	jr nz, .loop
 	call AnimationHideMonPic
 	ld hl, wTempPic
-	ld bc, 7 * 7 tiles
+	ld bc, PIC_SIZE tiles
 	xor a
 	call FillMemory
 	jp CopyTempPicToMonPic
@@ -1867,7 +1869,7 @@ CopyTempPicToMonPic:
 	ld hl, vFrontPic ; enemy turn
 .next
 	ld de, wTempPic
-	ld bc, 7 * 7
+	ld bc, PIC_SIZE
 	jp CopyVideoData
 
 AnimationWavyScreen:
@@ -1935,7 +1937,7 @@ AnimationSubstitute:
 ; Changes the pokemon's sprite to the mini sprite
 	ld hl, wTempPic
 	xor a
-	ld bc, 7 * 7 tiles
+	ld bc, PIC_SIZE tiles
 	call FillMemory
 	ldh a, [hWhoseTurn]
 	and a
@@ -2473,7 +2475,7 @@ AnimationShakeEnemyHUD:
 ; Make a copy of the back pic's tile patterns in sprite tile pattern VRAM.
 	ld de, vBackPic
 	ld hl, vSprites
-	ld bc, 7 * 7
+	ld bc, PIC_SIZE
 	call CopyVideoData
 
 	xor a
