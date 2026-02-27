@@ -36,8 +36,8 @@ Route12DefaultScript:
 	ld [wCurEnemyLevel], a
 	xor a ;;;;;;;;;;;;;;;;;;;; line added
 	ld [wIsTrainerBattle], a ; line added
-	ld a, HS_ROUTE_12_SNORLAX
-	ld [wMissableObjectIndex], a
+	ld a, TOGGLE_ROUTE_12_SNORLAX
+	ld [wToggleableObjectIndex], a
 	predef HideObject
 	ld a, SCRIPT_ROUTE12_SNORLAX_POST_BATTLE
 	ld [wRoute12CurScript], a

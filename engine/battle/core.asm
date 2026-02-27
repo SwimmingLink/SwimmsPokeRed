@@ -1255,7 +1255,7 @@ SlideTrainerPicOffScreen:
 	ldh a, [hSlideAmount]
 	cp 8
 	jr z, .slideRight
-.slideLeft ; slide player sprite off screen
+; slide player sprite left off screen
 	ld a, [hld]
 	ld [hli], a
 	inc hl
@@ -3123,7 +3123,7 @@ PlayerCanExecuteChargingMove:
 	                    ; resulting in the Pokemon being invulnerable for the whole battle
 	res INVULNERABLE, [hl]
 PlayerCanExecuteMove:
-	call PrintMonName1Text
+	call DisplayUsedMoveText
 	ld hl, DecrementPP
 	ld de, wPlayerSelectedMove ; pointer to the move just used
 	ld b, BANK(DecrementPP)
@@ -3565,11 +3565,12 @@ CheckPlayerStatusConditions:
 	ld hl, AttackContinuesText
 	call PrintText
 	ld a, [wPlayerNumAttacksLeft]
-	dec a ; did multi-turn move end?
+	dec a
 	ld [wPlayerNumAttacksLeft], a
-	ld hl, GetPlayerAnimationType ; if it didn't, skip damage calculation (deal damage equal to last hit),
-	                ; DecrementPP and MoveHitTest
-	jp nz, .returnToHL
+	ld hl, GetPlayerAnimationType ; skip damage calculation (deal damage equal to last hit),
+	                              ; DecrementPP and MoveHitTest
+	jp nz, .returnToHL  ; redundant leftover code, the case wEnemyNumAttacksLeft == 0
+						; is handled within CheckNumAttacksLeft
 	jp .returnToHL
 
 .RageCheck
@@ -3634,7 +3635,7 @@ ConfusedNoMoreText:
 	text_far _ConfusedNoMoreText
 	text_end
 
-SavingEnergyText:
+SavingEnergyText: ; unreferenced
 	text_far _SavingEnergyText
 	text_end
 
@@ -3720,139 +3721,7 @@ HandleSelfConfusionDamage:
 	ldh [hWhoseTurn], a
 	jp ApplyDamageToPlayerPokemon
 
-PrintMonName1Text:
-	ld hl, MonName1Text
-	jp PrintText
-
-; this function wastes time calling DetermineExclamationPointTextNum
-; and choosing between Used1Text and Used2Text, even though
-; those text strings are identical and both continue at PrintInsteadText
-; this likely had to do with Japanese grammar that got translated,
-; but the functionality didn't get removed
-MonName1Text:
-	text_far _MonName1Text
-	text_asm
-	ldh a, [hWhoseTurn]
-	and a
-	ld a, [wPlayerMoveNum]
-	ld hl, wPlayerUsedMove
-	jr z, .playerTurn
-	ld a, [wEnemyMoveNum]
-	ld hl, wEnemyUsedMove
-.playerTurn
-	ld [hl], a
-	ld [wMoveGrammar], a
-	call DetermineExclamationPointTextNum
-	ld a, [wMonIsDisobedient]
-	and a
-	ld hl, Used2Text
-	ret nz
-	ld a, [wMoveGrammar]
-	cp 3
-	ld hl, Used2Text
-	ret c
-	ld hl, Used1Text
-	ret
-
-Used1Text:
-	text_far _Used1Text
-	text_asm
-	jr PrintInsteadText
-
-Used2Text:
-	text_far _Used2Text
-	text_asm
-	; fall through
-
-PrintInsteadText:
-	ld a, [wMonIsDisobedient]
-	and a
-	jr z, PrintMoveName
-	ld hl, InsteadText
-	ret
-
-InsteadText:
-	text_far _InsteadText
-	text_asm
-	; fall through
-
-PrintMoveName:
-	ld hl, _PrintMoveName
-	ret
-
-_PrintMoveName:
-	text_far _MoveNameText
-	text_asm
-	ld hl, ExclamationPointPointerTable
-	ld a, [wMoveGrammar]
-	add a
-	push bc
-	ld b, $0
-	ld c, a
-	add hl, bc
-	pop bc
-	ld a, [hli]
-	ld h, [hl]
-	ld l, a
-	ret
-
-ExclamationPointPointerTable:
-	dw ExclamationPoint1Text
-	dw ExclamationPoint2Text
-	dw ExclamationPoint3Text
-	dw ExclamationPoint4Text
-	dw ExclamationPoint5Text
-
-ExclamationPoint1Text:
-	text_far _ExclamationPoint1Text
-	text_end
-
-ExclamationPoint2Text:
-	text_far _ExclamationPoint2Text
-	text_end
-
-ExclamationPoint3Text:
-	text_far _ExclamationPoint3Text
-	text_end
-
-ExclamationPoint4Text:
-	text_far _ExclamationPoint4Text
-	text_end
-
-ExclamationPoint5Text:
-	text_far _ExclamationPoint5Text
-	text_end
-
-; this function does nothing useful
-; if the move being used is in set [1-4] from ExclamationPointMoveSets,
-; use ExclamationPoint[1-4]Text
-; otherwise, use ExclamationPoint5Text
-; but all five text strings are identical
-; this likely had to do with Japanese grammar that got translated,
-; but the functionality didn't get removed
-DetermineExclamationPointTextNum:
-	push bc
-	ld a, [wMoveGrammar] ; move ID
-	ld c, a
-	ld b, $0
-	ld hl, ExclamationPointMoveSets
-.loop
-	ld a, [hli]
-	cp $ff
-	jr z, .done
-	cp c
-	jr z, .done
-	and a
-	jr nz, .loop
-	inc b
-	jr .loop
-.done
-	ld a, b
-	ld [wMoveGrammar], a
-	pop bc
-	ret
-
-INCLUDE "data/moves/grammar.asm"
+INCLUDE "engine/battle/used_move_text.asm"
 
 PrintMoveFailureText:
 	ld de, wPlayerMoveEffect
@@ -4179,7 +4048,7 @@ GetDamageVarsForPlayerAttack:
 	ld a, [hl] ; a = [wPlayerMoveType]
 	cp SPECIAL ; types >= SPECIAL are all special
 	jr nc, .specialAttack
-.physicalAttack
+; physical attack
 	ld hl, wEnemyMonDefense
 	ld a, [hli]
 	ld b, a
@@ -4292,7 +4161,7 @@ GetDamageVarsForEnemyAttack:
 	ld a, [hl] ; a = [wEnemyMoveType]
 	cp SPECIAL ; types >= SPECIAL are all special
 	jr nc, .specialAttack
-.physicalAttack
+; physical attack
 	ld hl, wBattleMonDefense
 	ld a, [hli]
 	ld b, a
@@ -5309,7 +5178,6 @@ AdjustDamageForMoveType:
 	ld [hl], a
 	or b ; is damage 0?
 	jr nz, .skipTypeImmunity
-.typeImmunity
 ; if damage is 0, make the move miss
 ; this only occurs if a move that would do 2 or 3 damage is 0.25x effective against the target
 	inc a
@@ -5402,7 +5270,7 @@ MoveHitTest:
 	ldh a, [hWhoseTurn]
 	and a
 	jr nz, .enemyTurn
-.playerTurn
+; player's turn
 ; this checks if the move effect is disallowed by mist
 	ld a, [wPlayerMoveEffect]
 	cp ATTACK_DOWN1_EFFECT
@@ -5474,12 +5342,12 @@ MoveHitTest:
 	ld [wMoveMissed], a
 	ldh a, [hWhoseTurn]
 	and a
-	jr z, .playerTurn2
-.enemyTurn2
+	jr z, .playerTurn
+; enemy's turn
 	ld hl, wEnemyBattleStatus1
 	res USING_TRAPPING_MOVE, [hl] ; end multi-turn attack e.g. wrap
 	ret
-.playerTurn2
+.playerTurn
 	ld hl, wPlayerBattleStatus1
 	res USING_TRAPPING_MOVE, [hl] ; end multi-turn attack e.g. wrap
 	ret
@@ -5650,7 +5518,7 @@ EnemyCanExecuteChargingMove:
 EnemyCanExecuteMove:
 	xor a
 	ld [wMonIsDisobedient], a
-	call PrintMonName1Text
+	call DisplayUsedMoveText
 	ld a, [wEnemyMoveEffect]
 	ld hl, ResidualEffects1
 	ld de, $1
@@ -6071,10 +5939,11 @@ CheckEnemyStatusConditions:
 	ld hl, AttackContinuesText
 	call PrintText
 	ld hl, wEnemyNumAttacksLeft
-	dec [hl] ; did multi-turn move end?
-	ld hl, GetEnemyAnimationType ; if it didn't, skip damage calculation (deal damage equal to last hit),
+	dec [hl]
+	ld hl, GetEnemyAnimationType ; skip damage calculation (deal damage equal to last hit),
 	                             ; DecrementPP and MoveHitTest
-	jp nz, .enemyReturnToHL
+	jp nz, .enemyReturnToHL ; redundant leftover code, the case wEnemyNumAttacksLeft == 0
+							; is handled within CheckNumAttacksLeft
 	jp .enemyReturnToHL
 .checkIfUsingRage
 	ld a, [wEnemyBattleStatus2]
@@ -6424,7 +6293,7 @@ QuarterSpeedDueToParalysis:
 	ldh a, [hWhoseTurn]
 	and a
 	jr z, .playerTurn
-.enemyTurn ; quarter the player's speed
+; enemy's turn, quarter the player's speed
 	ld a, [wBattleMonStatus]
 	and 1 << PAR
 	ret z ; return if player not paralysed
@@ -6467,7 +6336,7 @@ HalveAttackDueToBurn:
 	ldh a, [hWhoseTurn]
 	and a
 	jr z, .playerTurn
-.enemyTurn ; halve the player's attack
+; enemy's turn, halve the player's attack
 	ld a, [wBattleMonStatus]
 	and 1 << BRN
 	ret z ; return if player not burnt
@@ -6651,7 +6520,7 @@ LoadHudTilePatterns:
 	ldh a, [rLCDC]
 	add a ; is LCD disabled?
 	jr c, .lcdEnabled
-.lcdDisabled
+; LCD disabled
 	ld hl, BattleHudTiles1
 	ld de, vChars2 tile $6d
 	ld bc, BattleHudTiles1End - BattleHudTiles1
