@@ -490,7 +490,7 @@ HandlePoisonBurnLeechSeed:
 	xor a
 	ld [wAnimationType], a
 	ld a, BURN_PSN_ANIM
-	call PlayMoveAnimation   ; play burn/poison animation
+	call PlayAltAnimation    ; play burn/poison animation ; changed from PlayMoveAnimation to PlayAltAnimation
 	pop hl
 	call HandlePoisonBurnLeechSeed_DecreaseOwnHP
 .notBurnedOrPoisoned
@@ -943,6 +943,12 @@ TrainerBattleVictory:
 ; win money
 	ld hl, MoneyForWinningText
 	call PrintText
+
+	xor a ;;;;;;;;;;;;;;;;;;;;; This line and the three lines below were added to allow splitting the trainer lookup table from the Pokémon species lookup table
+	ld [wIsTrainerBattle], a ;; This line, the line above, and the two lines below were added to allow splitting the trainer lookup table from the Pokémon species lookup table
+	inc a ;;;;;;;;;;;;;;;;;;;;; This line, the two lines above, and the line below were added to allow splitting the trainer lookup table from the Pokémon species lookup table
+	ld [wWasTrainerBattle], a ; This line and the three lines above were added to allow splitting the trainer lookup table from the Pokémon species lookup table
+
 	ld de, wPlayerMoney + 2
 	ld hl, wAmountMoneyWon + 2
 	ld c, $3
@@ -1130,6 +1136,8 @@ ChooseNextMon:
 ; called when player is out of usable mons.
 ; prints appropriate lose message, sets carry flag if player blacked out (special case for initial rival fight)
 HandlePlayerBlackOut:
+	xor a ;;;;;;;;;;;;;;;;;;;; This line and the line below were added to allow splitting the trainer lookup table from the Pokémon species lookup table
+	ld [wIsTrainerBattle], a ; This line and the line above were added to allow splitting the trainer lookup table from the Pokémon species lookup table
 	ld a, [wLinkState]
 	cp LINK_STATE_BATTLING
 	jr z, .notRival1Battle
@@ -1757,7 +1765,7 @@ SendOutMon:
 	ld a, $1
 	ldh [hWhoseTurn], a
 	ld a, POOF_ANIM
-	call PlayMoveAnimation
+	call PlayAltAnimation ; changed from PlayMoveAnimation to PlayAltAnimation
 	hlcoord 4, 11
 	predef AnimateSendingOutMon
 	ld a, [wCurPartySpecies]
@@ -3194,7 +3202,7 @@ PlayerCheckIfFlyOrChargeEffect:
 	xor a
 	ld [wAnimationType], a
 	ld a, STATUS_AFFECTED_ANIM
-	call PlayMoveAnimation
+	call PlayAltAnimation ; changed from PlayMoveAnimation to PlayAltAnimation
 MirrorMoveCheck:
 	ld a, [wPlayerMoveEffect]
 	cp MIRROR_MOVE_EFFECT
@@ -3339,7 +3347,7 @@ CheckPlayerStatusConditions:
 	xor a
 	ld [wAnimationType], a
 	ld a, SLP_PLAYER_ANIM
-	call PlayMoveAnimation
+	call PlayAltAnimation ; changed from PlayMoveAnimation to PlayAltAnimation
 	ld hl, FastAsleepText
 	call PrintText
 	jr .sleepDone
@@ -3423,7 +3431,7 @@ CheckPlayerStatusConditions:
 	xor a
 	ld [wAnimationType], a
 	ld a, CONF_PLAYER_ANIM
-	call PlayMoveAnimation
+	call PlayAltAnimation ; changed from PlayMoveAnimation to PlayAltAnimation
 	call BattleRandom
 	cp 50 percent + 1 ; chance to hurt itself
 	jr c, .TriedToUseDisabledMoveCheck
@@ -3473,7 +3481,7 @@ CheckPlayerStatusConditions:
 	xor a
 	ld [wAnimationType], a
 	ld a, STATUS_AFFECTED_ANIM
-	call PlayMoveAnimation
+	call PlayAltAnimation ; changed from PlayMoveAnimation to PlayAltAnimation
 .NotFlyOrChargeEffect
 	ld hl, ExecutePlayerMoveDone
 	jp .returnToHL ; if using a two-turn move, we need to recharge the first turn
@@ -5596,7 +5604,7 @@ EnemyCheckIfFlyOrChargeEffect:
 	xor a
 	ld [wAnimationType], a
 	ld a, STATUS_AFFECTED_ANIM
-	call PlayMoveAnimation
+	call PlayAltAnimation ; changed from PlayMoveAnimation to PlayAltAnimation
 EnemyCheckIfMirrorMoveEffect:
 	ld a, [wEnemyMoveEffect]
 	cp MIRROR_MOVE_EFFECT
@@ -5688,7 +5696,7 @@ CheckEnemyStatusConditions:
 	xor a
 	ld [wAnimationType], a
 	ld a, SLP_ANIM
-	call PlayMoveAnimation
+	call PlayAltAnimation ; changed from PlayMoveAnimation to PlayAltAnimation
 	jr .sleepDone
 .wokeUp
 	ld hl, WokeUpText
@@ -5764,7 +5772,7 @@ CheckEnemyStatusConditions:
 	xor a
 	ld [wAnimationType], a
 	ld a, CONF_ANIM
-	call PlayMoveAnimation
+	call PlayAltAnimation ; changed from PlayMoveAnimation to PlayAltAnimation
 	call BattleRandom
 	cp $80
 	jr c, .checkIfTriedToUseDisabledMove
@@ -5849,7 +5857,7 @@ CheckEnemyStatusConditions:
 	xor a
 	ld [wAnimationType], a
 	ld a, STATUS_AFFECTED_ANIM
-	call PlayMoveAnimation
+	call PlayAltAnimation ; changed from PlayMoveAnimation to PlayAltAnimation
 .notFlyOrChargeEffect
 	ld hl, ExecuteEnemyMoveDone
 	jp .enemyReturnToHL ; if using a two-turn move, enemy needs to recharge the first turn
@@ -6209,7 +6217,8 @@ LoadPlayerBackPic:
 	ld a, BANK(RedPicBack)
 	ASSERT BANK(RedPicBack) == BANK(OldManPicBack)
 	call UncompressSpriteFromDE
-	predef ScaleSpriteByTwo
+;	; predef ScaleSpriteByTwo ;;; this line was replaced by the line below to allow back sprites an increased resolution
+	call LoadBackSpriteUnzoomed ; this line     replaced    the line above to allow back sprites an increased resolution
 	ld hl, wShadowOAM
 	xor a
 	ldh [hOAMTile], a ; initial tile number
@@ -6241,8 +6250,8 @@ LoadPlayerBackPic:
 	ld e, a
 	dec b
 	jr nz, .loop
-	ld de, vBackPic
-	call InterlaceMergeSpriteBuffers
+;	; ld de, vBackPic ;;;;;;;;;;;;;;;;;; This line and the line below were removed to allow back sprites an increased resolution
+;	; call InterlaceMergeSpriteBuffers ; This line and the line above were removed to allow back sprites an increased resolution
 	ld a, RAMG_SRAM_ENABLE
 	ld [rRAMG], a
 	xor a
@@ -6637,7 +6646,15 @@ PlayMoveAnimation:
 	vc_hook_red Reduce_move_anim_flashing_Confusion
 	call Delay3
 	vc_hook_red Reduce_move_anim_flashing_Psychic
+; set alternative animation ID to be zero so that we use the move animations. ; Added
+	xor a ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Added
+	ld [wAltAnimationID], a ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Added
 	predef_jump MoveAnimation
+
+; call this subroutine if we are playing an alternative animation. ;;;;;;;;;;;; Added
+PlayAltAnimation: ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Added
+	ld [wAltAnimationID], a ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Added
+	predef_jump MoveAnimation ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Added
 
 InitBattle::
 	ld a, [wCurOpponent]
@@ -6671,9 +6688,12 @@ InitBattleCommon:
 	push af
 	res BIT_TEXT_DELAY, [hl] ; no delay
 	callfar InitBattleVariables
+	ld a, [wIsTrainerBattle] ; This line and the two lines below were added to allow splitting the trainer lookup table from the Pokémon species lookup table
+	and a ;;;;;;;;;;;;;;;;;;;; This line, the line above, and the line below were added to allow splitting the trainer lookup table from the Pokémon species lookup table
+	jp z, InitWildBattle ;;;;; This line and the two lines above were added to allow splitting the trainer lookup table from the Pokémon species lookup table
 	ld a, [wEnemyMonSpecies2]
 	sub OPP_ID_OFFSET
-	jp c, InitWildBattle
+;	; jp c, InitWildBattle ; This line was removed to allow splitting the trainer lookup table from the Pokémon species lookup table
 	ld [wTrainerClass], a
 	call GetTrainerInformation
 	callfar ReadTrainer
@@ -6902,12 +6922,19 @@ LoadMonBackPic:
 	call ClearScreenArea
 	ld hl, wMonHBackSprite - wMonHeader
 	call UncompressMonSprite
-	predef ScaleSpriteByTwo
-	ld de, vBackPic
-	call InterlaceMergeSpriteBuffers ; combine the two buffers to a single 2bpp sprite
+;	; predef ScaleSpriteByTwo
+;	; ld de, vBackPic
+;	; call InterlaceMergeSpriteBuffers ; combine the two buffers to a single 2bpp sprite
+	call LoadBackSpriteUnzoomed ; This line replaces the three lines above to allow back sprites an increased resolution
 	ld hl, vSprites
 	ld de, vBackPic
 	ld c, (2 * SPRITEBUFFERSIZE) / TILE_SIZE ; count of 16-byte chunks to be copied
 	ldh a, [hLoadedROMBank]
 	ld b, a
 	jp CopyVideoData
+
+LoadBackSpriteUnzoomed: ; This line and the four lines below were added to allow back sprites an increased resolution
+	ld a, $66
+	ld de, vBackPic
+	push de
+	jp LoadUncompressedBackSprite

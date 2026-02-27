@@ -21,6 +21,9 @@ AnimationIdSpecialEffects:
 	anim_special_effect SPORE,                 AnimationFlashScreen
 	anim_special_effect EXPLOSION,             DoExplodeSpecialEffects
 	anim_special_effect ROCK_SLIDE,            DoRockSlideSpecialEffects
+	db -1 ; end ;;;;;;;;;;;;;;; This line and the line below were added to split the list into two to make room for more moves
+
+AltAnimationIdSpecialEffects: ; This line and the line above were added to split the list into two to make room for more moves
 	anim_special_effect TRADE_BALL_DROP_ANIM,  TradeHidePokemon
 	anim_special_effect TRADE_BALL_SHAKE_ANIM, TradeShakePokeball
 	anim_special_effect TRADE_BALL_TILT_ANIM,  TradeJumpPokeball

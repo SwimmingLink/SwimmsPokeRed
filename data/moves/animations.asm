@@ -166,6 +166,9 @@ AttackAnimationPointers:
 	dw SubstituteAnim
 	dw StruggleAnim
 	assert_table_length NUM_ATTACKS
+
+AlternativeAnimationPointers: ; This line and the line below were added to split the pointers into two separate tables
+	table_width 2 ;;;;;;;;;;;;; This line and the line above were added to split the pointers into two separate tables
 	dw ShowPicAnim
 	dw EnemyFlashAnim
 	dw PlayerFlashAnim
@@ -203,7 +206,7 @@ AttackAnimationPointers:
 	dw HidePicAnim
 	dw ThrowRockAnim
 	dw ThrowBaitAnim
-	assert_table_length NUM_ATTACK_ANIMS
+	assert_table_length NUM_ALTERNATIVE_ANIMS ; This line was changed from NUM_ATTACK_ANIMS to NUM_ALTERNATIVE_ANIMS to split the pointers into two tables
 	dw ZigZagScreenAnim
 
 ; each animation is a list of subanimations

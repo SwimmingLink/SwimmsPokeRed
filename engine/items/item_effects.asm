@@ -421,7 +421,7 @@ ItemUseBall:
 
 ; Do the animation.
 	ld a, TOSS_ANIM
-	ld [wAnimationID], a
+	ld [wAltAnimationID], a ; changed from wAnimationID to wAltAnimationID
 	xor a
 	ldh [hWhoseTurn], a
 	ld [wAnimationType], a
@@ -1458,7 +1458,7 @@ ItemUseRock:
 	ld de, wSafariBaitFactor
 
 BaitRockCommon:
-	ld [wAnimationID], a
+	ld [wAltAnimationID], a ; changed from wAnimationID to wAltAnimationID
 	xor a
 	ld [wAnimationType], a
 	ldh [hWhoseTurn], a
@@ -1656,6 +1656,7 @@ ItemUseXStat:
 	call PrintItemUseTextAndRemoveItem
 	ld a, XSTATITEM_ANIM ; X stat item animation ID
 	ld [wPlayerMoveNum], a
+	ld [wAltAnimationID], a ; Added
 	call LoadScreenTilesFromBuffer1 ; restore saved screen
 	call Delay3
 	xor a
@@ -2294,7 +2295,7 @@ ThrowBallAtTrainerMon:
 	call LoadScreenTilesFromBuffer1 ; restore saved screen
 	call Delay3
 	ld a, TOSS_ANIM
-	ld [wAnimationID], a
+	ld [wAltAnimationID], a ; changed from wAnimationID to wAltAnimationID
 	predef MoveAnimation ; do animation
 	ld hl, ThrowBallAtTrainerMonText1
 	call PrintText

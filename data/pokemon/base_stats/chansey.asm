@@ -10,7 +10,7 @@
 	INCBIN "gfx/pokemon/front/chansey.pic", 0, 1 ; sprite dimensions
 	dw ChanseyPicFront, ChanseyPicBack
 
-	db POUND, DOUBLESLAP, NO_MOVE, NO_MOVE ; level 1 learnset
+	db POUND, DOUBLESLAP, TAIL_WHIP, NO_MOVE ; level 1 learnset ; Added Tail Whip (from Yellow)
 	db GROWTH_FAST ; growth rate
 
 	; tm/hm learnset
@@ -24,4 +24,5 @@
 	     FLASH
 	; end
 
-	db 0 ; padding
+	db BANK(ChanseyPicFront)
+	assert BANK(ChanseyPicFront) == BANK(ChanseyPicBack)

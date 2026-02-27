@@ -714,6 +714,7 @@ AIIncreaseStat:
 	push af
 	push hl
 	ld a, XSTATITEM_DUPLICATE_ANIM
+	ld [wAltAnimationID], a ; This line was added to allow splitting move animations from other animations to make space for more moves
 	ld [hli], a
 	ld [hl], b
 	callfar StatModifierUpEffect

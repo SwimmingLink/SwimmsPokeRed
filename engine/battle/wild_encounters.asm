@@ -99,6 +99,7 @@ TryDoWildEncounter:
 	ret
 .willEncounter
 	xor a
+	ld [wIsTrainerBattle], a ; This line was added to allow splitting the trainer lookup table from the Pokémon species lookup table
 	ret
 
 INCLUDE "data/wild/probabilities.asm"

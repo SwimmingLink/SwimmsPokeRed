@@ -1360,7 +1360,9 @@ wTempTilesetNumTiles:: db
 ; so that it can be restored when the player is done with the pokemart NPC
 wSavedListScrollOffset:: db
 
-	ds 2
+wAltAnimationID:: db ; This was added to allow splitting the move animations and alternate in-battle animations into two separate tables, lowering the following line from 2 to 1
+
+	ds 1 ; This was reduced from 2 to 1 to add the above line of wAltAnimationID
 
 ; base coordinates of frame block
 wBaseCoordX:: db
@@ -1543,7 +1545,7 @@ wMonHBackSprite:: dw
 wMonHMoves:: ds NUM_MOVES
 wMonHGrowthRate:: db
 wMonHLearnset:: flag_array NUM_TMS + NUM_HMS
-	ds 1
+wMonHPicBank:: db ; added to allow Pokémon species sprites to be in any bank
 wMonHeaderEnd::
 
 ; saved at the start of a battle and then written back at the end of the battle
@@ -1708,7 +1710,10 @@ wPseudoItemID:: db
 
 wUnusedAlreadyOwnedFlag:: db
 
-	ds 2
+;	ds 2 ;;;;;;;;;;; replaced by the two lines below to split the Pokémon species lookup table from the trainer lookup table
+wIsTrainerBattle:: db ;; added to split the Pokémon species lookup table from the trainer lookup table
+
+wWasTrainerBattle:: db ; added to split the Pokémon species lookup table from the trainer lookup table
 
 wEvoStoneItemID:: db
 

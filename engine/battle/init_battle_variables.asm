@@ -2,6 +2,7 @@ InitBattleVariables:
 	ldh a, [hTileAnimations]
 	ld [wSavedTileAnimations], a
 	xor a
+	ld [wWasTrainerBattle], a ; line added to initialize wWasTrainerBattle to be zero at the start of every fight
 	ld [wActionResultOrTookBattleTurn], a
 	ld [wBattleResult], a
 	ld hl, wPartyAndBillsPCSavedMenuItem

@@ -147,7 +147,7 @@ PoisonEffect:
 	cp POISON_EFFECT
 	jr z, .regularPoisonEffect
 	ld a, b
-	call PlayBattleAnimation2
+	call PlayAlternativeAnimation2 ; changed from PlayBattleAnimation2 to PlayAlternativeAnimation2
 	jp PrintText
 .regularPoisonEffect
 	call PlayCurrentMoveAnimation2
@@ -235,14 +235,14 @@ FreezeBurnParalyzeEffect:
 	ld [wEnemyMonStatus], a
 	call QuarterSpeedDueToParalysis ; quarter speed of affected mon
 	ld a, ENEMY_HUD_SHAKE_ANIM
-	call PlayBattleAnimation
+	call PlayAlternativeAnimation ; changed from PlayBattleAnimation to PlayAlternativeAnimation
 	jp PrintMayNotAttackText ; print paralysis text
 .burn1
 	ld a, 1 << BRN
 	ld [wEnemyMonStatus], a
 	call HalveAttackDueToBurn ; halve attack of affected mon
 	ld a, ENEMY_HUD_SHAKE_ANIM
-	call PlayBattleAnimation
+	call PlayAlternativeAnimation ; changed from PlayBattleAnimation to PlayAlternativeAnimation
 	ld hl, BurnedText
 	jp PrintText
 .freeze1
@@ -250,7 +250,7 @@ FreezeBurnParalyzeEffect:
 	ld a, 1 << FRZ
 	ld [wEnemyMonStatus], a
 	ld a, ENEMY_HUD_SHAKE_ANIM
-	call PlayBattleAnimation
+	call PlayAlternativeAnimation ; changed from PlayBattleAnimation to PlayAlternativeAnimation
 	ld hl, FrozenText
 	jp PrintText
 .opponentAttacker
@@ -468,6 +468,10 @@ UpdateStatDone:
 	ld de, wEnemyMoveNum
 	ld bc, wEnemyMonMinimized
 .playerTurn
+; check if we used an X-stat up item ; Added
+	ld a, [wAltAnimationID] ;;;;;;;;;; Added
+	and a ;;;;;;;;;;;;;;;;;;;;;;;;;;;; Added
+	jr nz, .notMinimize ;;;;;;;;;;;;;; Added
 	ld a, [de]
 	cp MINIMIZE
 	jr nz, .notMinimize
@@ -786,7 +790,7 @@ BideEffect:
 	ld [bc], a ; set Bide counter to 2 or 3 at random
 	ldh a, [hWhoseTurn]
 	add XSTATITEM_ANIM
-	jp PlayBattleAnimation2
+	jp PlayAlternativeAnimation2 ; changed from PlayBattleAnimation2 to PlayAlternativeAnimation2
 
 ThrashPetalDanceEffect:
 	ld hl, wPlayerBattleStatus1
@@ -805,7 +809,7 @@ ThrashPetalDanceEffect:
 	ld [de], a ; set thrash/petal dance counter to 2 or 3 at random
 	ldh a, [hWhoseTurn]
 	add SHRINKING_SQUARE_ANIM
-	jp PlayBattleAnimation2
+	jp PlayAlternativeAnimation2 ; changed from PlayBattleAnimation2 to PlayAlternativeAnimation2
 
 SwitchAndTeleportEffect:
 	ldh a, [hWhoseTurn]
@@ -1013,6 +1017,12 @@ ChargeEffect:
 	jr nz, .notFly
 	set INVULNERABLE, [hl] ; mon is now invulnerable to typical attacks (fly/dig)
 	ld b, TELEPORT ; load Teleport's animation
+;;; teleport is the only battle move animation so we handle it separately ; Added
+	xor a ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Added
+	ld [wAnimationType], a ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Added
+	ld a, b ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Added
+	call PlayBattleAnimation ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Added
+	jr .doneWithAnimations ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Added
 .notFly
 	ld a, [de]
 	cp DIG
@@ -1023,7 +1033,8 @@ ChargeEffect:
 	xor a
 	ld [wAnimationType], a
 	ld a, b
-	call PlayBattleAnimation
+	call PlayAlternativeAnimation ; changed from PlayBattleAnimation to PlayAlternativeAnimation
+.doneWithAnimations ;;;;;;;;;;;;;;; Added
 	ld a, [de]
 	ld [wChargeMoveNum], a
 	ld hl, ChargeMoveEffectText
@@ -1461,6 +1472,10 @@ PlayCurrentMoveAnimation2:
 PlayBattleAnimation2:
 ; play animation ID at a and animation type 6 or 3
 	ld [wAnimationID], a
+; zero out the alternative animation ; Added
+	xor a ;;;;;;;;;;;;;;;;;;;;;;;;;;;; Added
+	ld [wAltAnimationID], a ;;;;;;;;;; Added
+GotAnimationID: ;;;;;;;;;;;;;;;;;;;;;; Added
 	ldh a, [hWhoseTurn]
 	and a
 	ld a, ANIMATIONTYPE_SHAKE_SCREEN_HORIZONTALLY_SLOW_2
@@ -1470,11 +1485,19 @@ PlayBattleAnimation2:
 	ld [wAnimationType], a
 	jp PlayBattleAnimationGotID
 
+PlayAlternativeAnimation2: ;; Added
+	ld [wAltAnimationID], a ; Added
+	jr GotAnimationID ;;;;;;; Added
+
 PlayCurrentMoveAnimation:
 ; animation at MOVENUM will be played unless MOVENUM is 0
 ; resets wAnimationType
 	xor a
 	ld [wAnimationType], a
+;;; check for which type of animation to play ; Added
+	ld a, [wAltAnimationID] ;;;;;;;;;;;;;;;;;;; Added
+	and a ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Added
+	jr nz, PlayAlternativeAnimation ;;;;;;;;;;; Added
 	ldh a, [hWhoseTurn]
 	and a
 	ld a, [wPlayerMoveNum]
@@ -1488,6 +1511,9 @@ PlayCurrentMoveAnimation:
 PlayBattleAnimation:
 ; play animation ID at a and predefined animation type
 	ld [wAnimationID], a
+;;; zero out the alternative animation ; Added
+	xor a  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Added
+	ld [wAltAnimationID], a ;;;;;;;;;;;; Added
 
 PlayBattleAnimationGotID:
 ; play animation at wAnimationID
@@ -1499,3 +1525,7 @@ PlayBattleAnimationGotID:
 	pop de
 	pop hl
 	ret
+
+PlayAlternativeAnimation: ;;;;;;; Added
+	ld [wAltAnimationID], a ;;;;; Added
+	jr PlayBattleAnimationGotID ; Added

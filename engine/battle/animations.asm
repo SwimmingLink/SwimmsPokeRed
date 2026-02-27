@@ -142,9 +142,14 @@ DrawFrameBlock:
 	jr z, .advanceFrameBlockDestAddr ; skip cleaning OAM buffer
 	cp FRAMEBLOCKMODE_04
 	jr z, .done ; skip cleaning OAM buffer and don't advance the frame block destination address
+;;; Need to "CleanOAM" if using an alternative animation ; Comment added to explain the next few lines added
+	ld a, [wAltAnimationID] ; Line Added
+	and a ;;;;;;;;;;;;;;;;;;; Line Added
+	jr nz, .skipGrowlCheck ;; Line Added
 	ld a, [wAnimationID]
 	cp GROWL
 	jr z, .resetFrameBlockDestAddr
+.skipGrowlCheck ;;;;;;;;;;;;; Line Added
 	call AnimationCleanOAM
 .resetFrameBlockDestAddr
 	ld hl, wShadowOAM
@@ -165,12 +170,19 @@ PlayAnimation:
 	xor a
 	ldh [hROMBankTemp], a ; it looks like nothing reads this
 	ld [wSubAnimTransform], a
+; If [wAltAnimationID] = 0, then we play an attack animation ;;;;;;;;;;;;;; Line Added
+	ld a, [wAltAnimationID] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Line Added
+	and a ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Line Added
+	ld de, AlternativeAnimationPointers ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Line Added
+	jr nz, .gotAnimationType ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Line Added
 	ld a, [wAnimationID] ; get animation number
+	ld de, AttackAnimationPointers  ; animation command stream pointers ;;; This line was moved up (from 6 lines below)
+.gotAnimationType ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Line Added
 	dec a
 	ld l, a
 	ld h, 0
 	add hl, hl
-	ld de, AttackAnimationPointers  ; animation command stream pointers
+;	; ld de, AttackAnimationPointers  ; animation command stream pointers ; This line was moved up (6 lines)
 	add hl, de
 	ld a, [hli]
 	ld h, [hl]
@@ -265,6 +277,9 @@ PlayAnimation:
 	vc_hook Stop_reducing_move_anim_flashing_Guillotine
 	jr .animationLoop
 .AnimationOver
+;;; make sure we zero out the alt animation ID after we're finished with the animation. ; Comment added to explain the next two lines added
+	xor a ;;;;;;;;;;;;;;;;;;; Line added
+	ld [wAltAnimationID], a ; Line added
 	ret
 
 LoadSubanimation:
@@ -407,11 +422,17 @@ MoveAnimation:
 	push af
 	call WaitForSoundToFinish
 	call SetAnimationPalette
+; check alt animation first ;;;; Comment added to explain what the following added lines are doing
+	ld a, [wAltAnimationID] ;;;; Line added
+	and a ;;;;;;;;;;;;;;;;;;;;;; Line added
+	jr nz, .checkTossAnimation ; Line added 
 	ld a, [wAnimationID]
 	and a
 	jr z, .animationFinished
+	jr .moveAnimation ;;;;;;;;;; Line added
 
 	; if throwing a Poké Ball, skip the regular animation code
+.checkTossAnimation ;;;;;;;;;;;; Line Added
 	cp TOSS_ANIM
 	jr nz, .moveAnimation
 	ld de, .animationFinished
@@ -469,7 +490,7 @@ ShareMoveAnimations:
 
 .replaceAnim
 	ld a, b
-	ld [wAnimationID], a
+	ld [wAltAnimationID], a ; Changed from wAnimationID to wAltAnimationID
 	ret
 
 PlayApplyingAttackAnimation:
@@ -662,8 +683,13 @@ DoSpecialEffectByAnimationId:
 	push hl
 	push de
 	push bc
+	ld a, [wAltAnimationID] ;;;;;;;;;;;;; Line Added
+	and a ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Line Added
+	ld hl, AltAnimationIdSpecialEffects ; Line Added
+	jr nz, .usingAltAnimation ;;;;;;;;;;; Line Added
 	ld a, [wAnimationID]
 	ld hl, AnimationIdSpecialEffects
+.usingAltAnimation ;;;;;;;;;;;;;;;;;;;;;; Line Added
 	ld de, 3
 	call IsInArray
 	jr nc, .done
@@ -2238,6 +2264,9 @@ GetMoveSound:
 
 IsCryMove:
 ; set carry if the move animation involves playing a monster cry
+	ld a, [wAltAnimationID] ; Line Added
+	and a ;;;;;;;;;;;;;;;;;;; Line Added
+	ret nz ;;;;;;;;;;;;;;;;;; Line Added
 	ld a, [wAnimationID]
 	cp GROWL
 	jr z, .CryMove
@@ -2611,7 +2640,7 @@ TossBallAnimation:
 .done
 	ld a, b
 .PlayNextAnimation
-	ld [wAnimationID], a
+	ld [wAltAnimationID], a ; changed from wAnimationID to wAltAnimationID
 	push bc
 	push hl
 	call PlayAnimation
@@ -2628,12 +2657,12 @@ TossBallAnimation:
 
 .BlockBall
 	ld a, TOSS_ANIM
-	ld [wAnimationID], a
+	ld [wAltAnimationID], a ; changed from wAnimationID to wAltAnimationID
 	call PlayAnimation
 	ld a, SFX_FAINT_THUD
 	call PlaySound
 	ld a, BLOCKBALL_ANIM
-	ld [wAnimationID], a
+	ld [wAltAnimationID], a ; changed from wAnimationID to wAltAnimationID
 	jp PlayAnimation
 
 PlayApplyingAttackSound:

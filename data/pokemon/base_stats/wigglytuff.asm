@@ -3,7 +3,7 @@
 	db 140,  70,  45,  45,  50
 	;   hp  atk  def  spd  spc
 
-	db NORMAL, NORMAL ; type
+	db NORMAL, FAIRY ; type ; Added Fairy type from pure Normal Type to match gen' 6+
 	db 50 ; catch rate
 	db 109 ; base exp
 
@@ -23,4 +23,5 @@
 	     SUBSTITUTE,   STRENGTH,     FLASH
 	; end
 
-	db 0 ; padding
+	db BANK(WigglytuffPicFront)
+	assert BANK(WigglytuffPicFront) == BANK(WigglytuffPicBack)
