@@ -348,6 +348,11 @@ LearnMoveFromLevelUp:
 	ld a, [hli] ; move ID
 	jr nz, .learnSetLoop
 	ld d, a ; ID of move to learn
+	push hl ; save hl before the call because the function modifies it ; This line and the 4 lines following were added to allow multiple moves to be learned at the same level
+	call .tryToLearn ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	pop hl ; restore hl to continue the loop ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	jr .learnSetLoop ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+.tryToLearn ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; This line and the 4 lines above were added to allow multiple moves to be learned at the same level
 	ld a, [wMonDataLocation]
 	and a
 	jr nz, .next
