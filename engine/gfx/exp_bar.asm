@@ -177,7 +177,7 @@ SubThreeByteNum:
 ; return the address of the BattleMon's party struct attribute in hl
 BattleMonPartyAttr:
 	ld a, [wPlayerMonNumber]
-	ld bc, wPartyMon2 - wPartyMon1
+	ld bc, PARTYMON_STRUCT_LENGTH
 	jp AddNTimes
 
 AnimateEXPBarAgain:
@@ -245,3 +245,4 @@ IsCurrentMonBattleMon:
 	ld a, [wWhichPokemon]
 	cp b
 	ret
+
