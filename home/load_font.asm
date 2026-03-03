@@ -48,7 +48,7 @@ LoadHpBarAndStatusTilePatterns::
 	call GoodCopyVideoData
 	ld de, EXPBarGraphics
 	ld hl, vChars1 tile $40
-	lb bc, BANK(EXPBarGraphics), (EXPBarGraphicsEnd - EXPBarGraphics) / $10
+	lb bc, BANK(EXPBarGraphics), (EXPBarGraphicsEnd - EXPBarGraphics) / TILE_SIZE
 	jp GoodCopyVideoData
 
 GoodCopyVideoData:
