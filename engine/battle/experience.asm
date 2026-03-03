@@ -151,6 +151,7 @@ GainExperience:
 	xor a ; PLAYER_PARTY_DATA
 	ld [wMonDataLocation], a
 	call LoadMonData
+	call AnimateEXPBar ; Line Added to Add an Animated EXP Bar in Battle
 	pop hl
 	ld bc, MON_LEVEL - MON_EXP
 	add hl, bc
@@ -160,6 +161,7 @@ GainExperience:
 	ld a, [hl] ; current level
 	cp d
 	jp z, .nextMon ; if level didn't change, go to next mon
+	call KeepEXPBarFull ; Line Added to Add an Animated EXP Bar in Battle
 	ld a, [wCurEnemyLevel]
 	push af
 	push hl
@@ -245,6 +247,7 @@ GainExperience:
 	xor a ; PLAYER_PARTY_DATA
 	ld [wMonDataLocation], a
 	call LoadMonData
+	call AnimateEXPBarAgain ; Line Added to Add an Animated EXP Bar in Battle
 	ld d, LEVEL_UP_STATS_BOX
 	callfar PrintStatsBox
 	call WaitForTextScrollButtonPress
