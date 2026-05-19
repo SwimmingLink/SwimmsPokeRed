@@ -15,6 +15,7 @@ To set up the repository, see [**INSTALL.md**](INSTALL.md).
 
 ## See also
 
+- [Changelog/Spoilerlog](https://docs.google.com/document/d/1C3jyKxr0U8b5vwR3xq-CQuLfGGyGgqmw3l-KilkWPFE)
 - [**Wiki**][wiki] (includes [tutorials][tutorials])
 - [**Symbols**][symbols]
 - [**Tools**][tools]
