@@ -70,7 +70,7 @@ CalcEXPBarPixelLength:
 	callfar CalcExperience
 
 	; get the address of the active Pokemon's current experience
-	ld hl, MON_EXP
+	ld hl, wPartyMon1Exp
 	call BattleMonPartyAttr
 
 	; current exp - base exp
